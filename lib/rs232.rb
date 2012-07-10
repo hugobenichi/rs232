@@ -55,12 +55,12 @@ class RS232
     Win32::ReadFile @serial, @buffer, @buflen, @count, nil
     @error = Win32.error_check
     puts "read count %i" % @count.read_uint32 if @report
-    @buffer.read_string
+    @buffer.read_string.chomp
   end
   
   # write and read helper method
   def query string
-    write sring
+    write string
     read
   end
   

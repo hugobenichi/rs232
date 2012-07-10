@@ -1,0 +1,40 @@
+##
+ #  
+ #                          RS232
+ #    
+ #  Ruby interface to Windows Serial Port API
+ #  
+ #  author      hugo benichi
+ #  email       hugo.benichi@m4x.org
+ #  copyright   2012 hugo benichi  
+ #  version     0.1.0
+ #
+ ##
+ 
+  installation:  
+ 
+    run in the root directory
+      rake gem_install
+    
+    it will compile the gem library and produce a .gem package for ruby
+    it will then install the .gem automatically
+    
+  usage: 
+  
+    cf test/test_rs232.rb
+    
+    first, require the gem with
+      require 'rs232'
+      
+    then instance an object of RS232, passing an address, and optionally parameters to configure
+      serial_port = RS232.new 'COM1'
+    
+    the default parameters are
+      baud rate: 9600
+      8 bits
+      1 bit stop bit
+      no parity bit
+      control flow hardware (RTS/CTS)
+      delimiters "\r\n"
+
+    you can directly use the RS232 instance with the 'write', 'read', and 'query' commands
