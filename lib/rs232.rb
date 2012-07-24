@@ -8,10 +8,25 @@ class RS232
   
   # serial port object constructor
   # also sets the parameters and timeout properties through an hash argument
+  #   hash arguments options:
+  #     :mode
+  #     :file
+  #     :attr
+  #     :dcblength
+  #     :baudrate
+  #     :bytesize
+  #     :stopbits
+  #     :parity
+  #     :delimiter
+  #     :read_interval_timeout
+  #     :read_total_timeout_multiplier
+  #     :read_total_timeout_constant
+  #     :write_total_timeout_multiplier
+  #     :write_total_timeout_constant
   def initialize address, params = {} 
-    mode = Win32::GENERIC_READ | Win32::GENERIC_WRITE
-    type = Win32::OPEN_EXISTING
-    attr = Win32::FILE_ATTRIBUTE_NORMAL
+    mode = param[:mode] || Win32::GENERIC_READ | Win32::GENERIC_WRITE
+    type = param[:file] || Win32::OPEN_EXISTING
+    attr = param[:attr] || Win32::FILE_ATTRIBUTE_NORMAL
     @serial = Win32::CreateFileA( address, mode, 0, nil, type, attr, nil) 
     @error  = Win32.error_check
     puts "RS232 >> got file handle 0x%.8x for com port %s" % [@serial, address]   
