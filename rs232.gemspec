@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
 
   spec.name        = 'rs232'
   spec.version     = '0.1.1'
-  spec.date        = '2012-07-10'
+  spec.date        = '2012-07-24'
   spec.summary     = "Ruby interface to Windows Serial Port API"
   spec.description = "Allows to script access to the serial port on Windows. Simple read and write commands"
   spec.authors     = ["Hugo Benichi"]
