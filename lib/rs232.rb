@@ -1,4 +1,3 @@
-
 class RS232
 
   require 'ffi'
@@ -24,10 +23,11 @@ class RS232
   #     :write_total_timeout_multiplier
   #     :write_total_timeout_constant
   def initialize address, params = {} 
-    mode = param[:mode] || Win32::GENERIC_READ | Win32::GENERIC_WRITE
-    type = param[:file] || Win32::OPEN_EXISTING
-    attr = param[:attr] || Win32::FILE_ATTRIBUTE_NORMAL
-    @serial = Win32::CreateFileA( address, mode, 0, nil, type, attr, nil) 
+    mode  = params[:mode]  || Win32::GENERIC_READ | Win32::GENERIC_WRITE
+    share = params[:share] || 0 #Win32::FILE_SHARE_DELETE
+    type  = params[:file]  || Win32::OPEN_EXISTING
+    attr  = params[:attr]  || Win32::FILE_ATTRIBUTE_NORMAL
+    @serial = Win32::CreateFileA( address, mode, share, nil, type, attr, nil) 
     @error  = Win32.error_check
     puts "RS232 >> got file handle 0x%.8x for com port %s" % [@serial, address]   
     DCB.new.tap do |p|
@@ -62,6 +62,7 @@ class RS232
     @buffer.write_string  command
     Win32::WriteFile @serial, @buffer, command.length, @count, nil
     @error = Win32.error_check
+    @buffer.write_string "\0" #empty string buffer
     puts "write count %i" % @count.read_uint32 if @report
   end
   
@@ -116,10 +117,20 @@ class RS232
     def self.error_check
       self::GetLastError().tap{ |err| puts "error: %i | 0x%.8x" % [err,err] if err != 0 }
     end    
-    GENERIC_READ  = 0x80000000              # consts from Windows seven sdk:  
-    GENERIC_WRITE = 0x40000000              # extract with 
-    OPEN_EXISTING = 3                       #   grep -i "generic_read" *.h 
-    FILE_ATTRIBUTE_NORMAL = 0x00000080      # from the /Include directory
+	  # consts from Windows seven sdk. extract with 
+	  #   grep -i "generic_read" *.h
+	  # from the /Include directory
+	  FILE_SHARE_DELETE = 0x00000004
+	  FILE_SHARE_READ   = 0x00000001
+	  FILE_SHARE_WRITE  = 0x00000002
+	  FILE_SHARE_ALL    = FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE
+    GENERIC_READ  = 0x80000000               
+    GENERIC_WRITE = 0x40000000
+	  CREATE_NEW    = 1
+	  CREATE_ALWAYS = 2
+    OPEN_EXISTING = 3
+	  OPEN_ALWAYS   = 4
+    FILE_ATTRIBUTE_NORMAL = 0x00000080
   end
   
   # this struct is used by windows to configure the COMM port
