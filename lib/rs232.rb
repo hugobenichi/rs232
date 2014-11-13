@@ -3,7 +3,7 @@ class RS232
   require 'ffi'
   
   attr_accessor :report,    # flag set by client, if true reports read/write bits
-                :delimiter  # line delimiter caracters, default: "\r\n"
+                :delimiter  # line delimiter caracters, default: ""
   attr_reader   :count,     # number of last read/write bits
                 :error      # last error/status code 
   
