@@ -33,6 +33,6 @@
       1 bit stop bit
       no parity bit
       control flow hardware (RTS/CTS)
-      delimiters "\r\n"
+      delimiters ""
 
     you can use RS232 instances with 'write', 'read' and 'query' commands
