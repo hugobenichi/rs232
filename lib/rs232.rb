@@ -3,7 +3,7 @@ class RS232
   require 'ffi'
   
   attr_accessor :report,    # flag set by client, if true reports read/write bits
-                :delimiter  # line delimiter caracters, default: "\r\n"
+                :delimiter  # line delimiter caracters, default: ""
   attr_reader   :count,     # number of last read/write bits
                 :error      # last error/status code 
   
@@ -61,13 +61,13 @@ class RS232
     grow_buffer 128
     @count = FFI::MemoryPointer.new :uint, 1
     @report = false
-    @delimiter = params[:delimiter] || "\r\n"
+    @delimiter = params[:delimiter] || ""
   end
   
   # writes a string to the Serial port
   # automatically appends the delimiter characters stored in @delimiter
   def write string
-    command = "%s%s" % [string.chomp, @delimiter]
+    command = "%s%s" % [string , @delimiter]
     grow_buffer command.length
     @buffer.write_string  command
     Win32::WriteFile @serial, @buffer, command.length, @count, nil
